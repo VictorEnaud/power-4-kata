@@ -24,10 +24,10 @@ public class GrilleTest {
         Grille grille = new Grille();
 
         // When
-        grille.ajoutJeton(1, "ROUGE");
+        grille.ajouterJeton(1, Jetons.ROUGE);
 
         // Then
-        assertThat(grille.etat()[0][0]).isEqualTo("ROUGE");
+        assertThat(grille.etat()[0][0]).isEqualTo(Jetons.ROUGE);
     }
 
     @Test
@@ -36,48 +36,48 @@ public class GrilleTest {
         Grille grille = new Grille();
 
         // When
-        grille.ajoutJeton(2, "JAUNE");
+        grille.ajouterJeton(2, Jetons.JAUNE);
 
         // Then
-        assertThat(grille.etat()[1][0]).isEqualTo("JAUNE");
+        assertThat(grille.etat()[1][0]).isEqualTo(Jetons.JAUNE);
     }
 
     @Test
     public void ajoutJeton_doit_avoir_un_jeton_jaune_en_deuxième_colonne_deuxième_ligne_à_lajout_dun_jeton_rouge_en_deuxième_colonne_puis_dun_jeton_jaune() throws Exception {
         // Given
         Grille grille = new Grille();
-        grille.ajoutJeton(2, "ROUGE");
+        grille.ajouterJeton(2, Jetons.ROUGE);
 
         // When
-        grille.ajoutJeton(2, "JAUNE");
+        grille.ajouterJeton(2, Jetons.JAUNE);
 
         // Then
-        assertThat(grille.etat()[1][1]).isEqualTo("JAUNE");
+        assertThat(grille.etat()[1][1]).isEqualTo(Jetons.JAUNE);
     }
 
     @Test
     public void ajoutJeton_ne_doit_pas_permettre_dajouter_plus_de_6_jetons() throws Exception {
         // Given
         Grille grille = new Grille();
-        grille.ajoutJeton(3, "ROUGE");
-        grille.ajoutJeton(3, "ROUGE");
-        grille.ajoutJeton(3, "ROUGE");
-        grille.ajoutJeton(3, "ROUGE");
-        grille.ajoutJeton(3, "ROUGE");
-        grille.ajoutJeton(3, "ROUGE");
+        grille.ajouterJeton(3, Jetons.ROUGE);
+        grille.ajouterJeton(3, Jetons.ROUGE);
+        grille.ajouterJeton(3, Jetons.ROUGE);
+        grille.ajouterJeton(3, Jetons.ROUGE);
+        grille.ajouterJeton(3, Jetons.ROUGE);
+        grille.ajouterJeton(3, Jetons.ROUGE);
 
         // When
-        Throwable exception = catchThrowable(() -> grille.ajoutJeton(3, "JAUNE"));
+        Throwable exception = catchThrowable(() -> grille.ajouterJeton(3, Jetons.JAUNE));
 
         // Then
         assertThat(exception).isInstanceOf(ColonnePleineException.class);
         assertThat(grille.etat()[2]).hasSize(6);
-        assertThat(grille.etat()[2][0]).isEqualTo("ROUGE");
-        assertThat(grille.etat()[2][1]).isEqualTo("ROUGE");
-        assertThat(grille.etat()[2][2]).isEqualTo("ROUGE");
-        assertThat(grille.etat()[2][3]).isEqualTo("ROUGE");
-        assertThat(grille.etat()[2][4]).isEqualTo("ROUGE");
-        assertThat(grille.etat()[2][5]).isEqualTo("ROUGE");
+        assertThat(grille.etat()[2][0]).isEqualTo(Jetons.ROUGE);
+        assertThat(grille.etat()[2][1]).isEqualTo(Jetons.ROUGE);
+        assertThat(grille.etat()[2][2]).isEqualTo(Jetons.ROUGE);
+        assertThat(grille.etat()[2][3]).isEqualTo(Jetons.ROUGE);
+        assertThat(grille.etat()[2][4]).isEqualTo(Jetons.ROUGE);
+        assertThat(grille.etat()[2][5]).isEqualTo(Jetons.ROUGE);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class GrilleTest {
         Grille grille = new Grille();
 
         // When
-        Throwable exception = catchThrowable(() -> grille.ajoutJeton(NOMBRE_COLONNES + 1, "JAUNE"));
+        Throwable exception = catchThrowable(() -> grille.ajouterJeton(NOMBRE_COLONNES + 1, Jetons.JAUNE));
 
         // Then
         assertThat(exception).isInstanceOf(ColonneInexistante.class);
@@ -105,7 +105,7 @@ public class GrilleTest {
         Grille grille = new Grille();
 
         // When
-        Throwable exception = catchThrowable(() -> grille.ajoutJeton(0, "JAUNE"));
+        Throwable exception = catchThrowable(() -> grille.ajouterJeton(0, Jetons.JAUNE));
 
         // Then
         assertThat(exception).isInstanceOf(ColonneInexistante.class);
@@ -122,7 +122,7 @@ public class GrilleTest {
     public void vider_doit_vider_la_grille() throws Exception {
         // Given
         Grille grille = new Grille();
-        grille.ajoutJeton(3, "ROUGE");
+        grille.ajouterJeton(3, Jetons.ROUGE);
 
         // When
         grille.vider();
@@ -135,5 +135,65 @@ public class GrilleTest {
         assertThat(grille.etat()[4]).containsOnlyNulls();
         assertThat(grille.etat()[5]).containsOnlyNulls();
         assertThat(grille.etat()[6]).containsOnlyNulls();
+    }
+
+    @Test
+    public void afficher_doit_afficher_des_points_pour_les_cellules_vides() {
+        // Given
+        Grille grille = new Grille();
+
+        // When
+        String affichageGrille = grille.afficher();
+
+        // Then
+        String affichageAttendu = ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .";
+        assertThat(affichageGrille).isEqualTo(affichageAttendu);
+    }
+
+    @Test
+    public void afficher_doit_afficher_des_J_pour_les_jetons_jaunes() throws Exception{
+        // Given
+        Grille grille = new Grille();
+        grille.ajouterJeton(1, Jetons.JAUNE);
+        grille.ajouterJeton(3, Jetons.JAUNE);
+
+        // When
+        String affichageGrille = grille.afficher();
+
+        // Then
+        String affichageAttendu = ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                "J . J . . . .";
+        assertThat(affichageGrille).isEqualTo(affichageAttendu);
+    }
+
+    @Test
+    public void afficher_doit_afficher_des_R_pour_les_jetons_rouges() throws Exception{
+        // Given
+        Grille grille = new Grille();
+        grille.ajouterJeton(1, Jetons.JAUNE);
+        grille.ajouterJeton(1, Jetons.ROUGE);
+        grille.ajouterJeton(3, Jetons.ROUGE);
+        grille.ajouterJeton(3, Jetons.JAUNE);
+
+        // When
+        String affichageGrille = grille.afficher();
+
+        // Then
+        String affichageAttendu = ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                ". . . . . . .\n" +
+                "R . J . . . .\n" +
+                "J . R . . . .";
+        assertThat(affichageGrille).isEqualTo(affichageAttendu);
     }
 }

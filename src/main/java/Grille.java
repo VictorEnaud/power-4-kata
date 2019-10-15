@@ -3,20 +3,20 @@ import java.util.List;
 
 public class Grille {
 
-    private static final int NOMBRE_LIGNES = 6;
-    private static final int NOMBRE_COLONNES = 7;
+    public static final int NOMBRE_LIGNES = 6;
+    public static final int NOMBRE_COLONNES = 7;
     private static final Object CELLULE_VIDE = null;
-    private final String[][] etat;
+    private final Jetons[][] etat;
 
     public Grille() {
-        etat = new String[NOMBRE_COLONNES][NOMBRE_LIGNES];
+        etat = new Jetons[NOMBRE_COLONNES][NOMBRE_LIGNES];
     }
 
-    public String[][] etat() {
+    public Jetons[][] etat() {
         return etat;
     }
 
-    public void ajoutJeton(int numéroColonne, String jeton) throws ColonnePleineException, ColonneInexistante {
+    public void ajouterJeton(int numéroColonne, Jetons jeton) throws ColonnePleineException, ColonneInexistante {
         if (numéroColonne > NOMBRE_COLONNES || numéroColonne <= 0) {
             throw new ColonneInexistante();
         }
@@ -39,5 +39,25 @@ public class Grille {
                 etat[colonneIndex][ligneIndex] = null;
             }
         }
+    }
+
+    public String afficher() {
+        StringBuilder affichageBuilder = new StringBuilder();
+        for (int indexLigne = NOMBRE_LIGNES - 1; indexLigne >= 0; indexLigne--) {
+            for (int indexColonne = 0; indexColonne < NOMBRE_COLONNES; indexColonne++) {
+                Jetons cellule = etat[indexColonne][indexLigne];
+                if (cellule == null) {
+                    affichageBuilder.append(".");
+                } else {
+                    affichageBuilder.append(cellule.getReprésentation());
+                }
+                affichageBuilder.append(" ");
+            }
+            affichageBuilder.replace(affichageBuilder.length() - 1, affichageBuilder.length(), "\n");
+        }
+
+        affichageBuilder.delete(affichageBuilder.length() - 1, affichageBuilder.length());
+
+        return affichageBuilder.toString();
     }
 }
