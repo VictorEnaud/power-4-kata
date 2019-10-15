@@ -1,5 +1,6 @@
-import java.util.Arrays;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class Grille {
 
@@ -22,7 +23,7 @@ public class Grille {
         }
 
         int indexColonne = numéroColonne - 1;
-        List colonne = Arrays.asList(etat[indexColonne]);
+        List colonne = asList(etat[indexColonne]);
 
         int premièreCelluleVide = colonne.indexOf(CELLULE_VIDE);
 
